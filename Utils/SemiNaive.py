@@ -49,39 +49,43 @@ def FindProb2(self, CPTClass1, CPTClass2, CTClass1, CTClass2, group):
     print CPTClass1.shape
     epsilon = np.finfo(np.float).eps
     C1 = np.zeros((CPTClass1.shape[0],CPTClass1.shape[1]))
-    res2 = 0.0
-    for i in range(len(CPTClass1[0])):
-        #res2 = 0.0
-        for j in range(len(CPTClass1[1])):
-            res2 = 0.0
+    m = CPTClass1.shape[2] - 1
+    n = CPTClass1.shape[3] - 1
+    print m
+    print n
+    for i in range(CPTClass1.shape[0]):
+
+        for j in range(CPTClass1.shape[1]):
+
             pxixj = 0.0
             pxixjw1 = 0.0
             pxixjw2 = 0.0
             pxiw1 = 0.0
             pxjw1 = 0.0
+            res = 0.0
             pxiw2 = 0.0
             pxjw2 = 0.0
-            for each in range(CPTClass1.shape[2]):
-                res=0.0
-                ri1 = CTClass1[i][each]
-                rj1 = CTClass1[j][each]
-                ri2 = CTClass2[i][each]
-                rj2 = CTClass2[j][each]
+            for m in range(CPTClass1.shape[2]):
 
-                for each2 in range(CPTClass1.shape[3]):
-                    q1 = CPTClass1[i][j][each][each2]
-                    q2 = CPTClass2[i][j][each][each2]
-                    pxixj = (q1 + q2) / (group + group)
-                    pxixjw1 = q1 / group
-                    pxixjw2 = max(q2 / group, epsilon)
-                pxiw1 = ri1/group
-                pxjw1 = rj1/group
-                pxiw2 = max(ri2/group, epsilon)
-                pxjw2 = max(rj2/group, epsilon)
+                ri1 = CTClass1[i][m]
+                rj1 = CTClass1[j][m]
+                ri2 = CTClass2[i][m]
+                rj2 = CTClass2[j][m]
 
-                a= np.log(max(pxixjw1/pxixjw2,epsilon))
-                b= np.log(max((pxiw1*pxjw1)/(pxiw2*pxjw2),epsilon))
-                res = pxixj * abs(a - b)
+                for n in range(CPTClass1.shape[3]):
+                    q1 = CPTClass1[i][j][m][n]
+                    q2 = CPTClass2[i][j][m][n]
+                    pxixj += (q1 + q2) / (group + group)
+                    pxixjw1 += q1 / group
+                    pxixjw2 += max(q2 / group, epsilon)
+                pxiw1 += ri1/group
+                pxjw1 += rj1/group
+                pxiw2 += max(ri2/group, epsilon)
+                pxjw2 += max(rj2/group, epsilon)
+
+            a= np.log(max(pxixjw1/pxixjw2,epsilon))
+            b= np.log(max((pxiw1*pxjw1)/(pxiw2*pxjw2),epsilon))
+            res += pxixj * abs(a - b)
             res2 = res
             C1[i][j] = res2
     print C1
