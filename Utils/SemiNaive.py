@@ -22,7 +22,7 @@ def occArrayFunc(self, face, cutoff, group):
         #create variable for all possible values below
         occ1=0.0
         occ0=0.0
-        for each in x[0:group]:#restricting to Cutoff->2 samples
+        for each in x[0:cutoff]:#restricting to Cutoff->2 samples
             #change below loops according to possible values
             if each:
                 occ1+=1
@@ -46,6 +46,31 @@ def CoPairTabClass(self, face, cutoff, group):
     #print "one"
     #print coPairTabClass
     return coPairTabClass
+
+
+def findSubGroup(C1, group):
+    pass
+    temp = C1
+    print temp.shape
+    print group
+    submatrix = np.zeros((temp.shape[0], group))
+    for each in range(group):
+        for col in range(temp.shape[0]):
+            if each==0:
+                submatrix[col][each] = col
+                #print submatrix
+                temp[col][col] = 0.0
+            else:
+                print C1[col]
+                #temparr = np.max(C1[col])
+                ind = np.argmax(C1[col])
+                submatrix[col][each] = ind
+                temp[col][ind] = 0.0
+                #ind = C1[col].index(max(C1[col]))
+                #print ind
+                #submatrix[col][each] = max(i for i in C1[col])
+    print temp
+    print submatrix
 
 
 def FindProb2(self, CPTClass1, CPTClass2, CTClass1, CTClass2, group):
@@ -97,6 +122,7 @@ def FindProb2(self, CPTClass1, CPTClass2, CTClass1, CTClass2, group):
             #res2 = res
             C1[i][j] = float("{0:.3f}".format(res2))
     print C1
+    findSubGroup(C1, group)
 
 
 def FindProb(self, CPTClass1, CPTClass2, CTClass1, CTClass2, group):
