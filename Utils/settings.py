@@ -9,5 +9,5 @@ def init():
     global NUM_CUTOFF 
     global SUBGROUP_SIZE
     
-    NUM_CUTOFF = 5
-    SUBGROUP_SIZE = 5
+    NUM_CUTOFF = 5#values of each pixel
+    SUBGROUP_SIZE = 5#group value in section 4

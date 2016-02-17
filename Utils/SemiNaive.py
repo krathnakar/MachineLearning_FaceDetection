@@ -1,6 +1,10 @@
 # -*- coding: utf-8 -*-
 import numpy as np
 
+
+
+
+
 class SemiNaive:
     def __init__(self, face,numCutOff, group):
         cutoff = numCutOff
@@ -8,11 +12,14 @@ class SemiNaive:
         nonface = np.array([[1,1,1,0],[0,1,0,1],[0,1,1,0]]).T
         print face
         print nonface
+        pixels = len(face)
         CTClass1 = occArrayFunc(self, face, cutoff, group)
         CPTClass1 = CoPairTabClass(self, face, cutoff, group)
         CTClass2 = occArrayFunc(self, nonface, cutoff, group)
         CPTClass2 = CoPairTabClass(self, nonface, cutoff, group)
-        FindProb2(self, CPTClass1, CPTClass2, CTClass1, CTClass2, group)
+        ProbTabel = FindProb2(self, CPTClass1, CPTClass2, CTClass1, CTClass2, group)
+        SubGroup = findSubGroup(ProbTabel, group)
+        probTabSubGroup(pixels, cutoff, group)
 
 
 def occArrayFunc(self, face, cutoff, group):
@@ -24,9 +31,9 @@ def occArrayFunc(self, face, cutoff, group):
         occ0=0.0
         for each in x[0:cutoff]:#restricting to Cutoff->2 samples
             #change below loops according to possible values
-            if each:
+            if each==1:
                 occ1+=1
-            else:
+            elif each==0:
                 occ0+=1
         temp = [occ0, occ1]#row in occurence table
         occArray.append(temp)#occurence table
@@ -47,30 +54,6 @@ def CoPairTabClass(self, face, cutoff, group):
     #print coPairTabClass
     return coPairTabClass
 
-
-def findSubGroup(C1, group):
-    pass
-    temp = C1
-    print temp.shape
-    print group
-    submatrix = np.zeros((temp.shape[0], group))
-    for each in range(group):
-        for col in range(temp.shape[0]):
-            if each==0:
-                submatrix[col][each] = col
-                #print submatrix
-                temp[col][col] = 0.0
-            else:
-                print C1[col]
-                #temparr = np.max(C1[col])
-                ind = np.argmax(C1[col])
-                submatrix[col][each] = ind
-                temp[col][ind] = 0.0
-                #ind = C1[col].index(max(C1[col]))
-                #print ind
-                #submatrix[col][each] = max(i for i in C1[col])
-    print temp
-    print submatrix
 
 
 def FindProb2(self, CPTClass1, CPTClass2, CTClass1, CTClass2, group):
@@ -122,9 +105,40 @@ def FindProb2(self, CPTClass1, CPTClass2, CTClass1, CTClass2, group):
             #res2 = res
             C1[i][j] = float("{0:.3f}".format(res2))
     print C1
-    findSubGroup(C1, group)
+    return C1
 
 
+def findSubGroup(C1, group):
+    pass
+    temp = C1
+    print temp.shape
+    print group
+    submatrix = np.zeros((temp.shape[0], group))
+    for each in range(group):
+        for col in range(temp.shape[0]):
+            if each==0:
+                submatrix[col][each] = col
+                #print submatrix
+                temp[col][col] = 0.0
+            else:
+                #print C1[col]
+                #temparr = np.max(C1[col])
+                ind = np.argmax(C1[col])
+                submatrix[col][each] = ind
+                temp[col][ind] = 0.0
+                #ind = C1[col].index(max(C1[col]))
+                #print ind
+                #submatrix[col][each] = max(i for i in C1[col])
+    print temp
+    return submatrix
+
+
+def probTabSubGroup(pixels, cutoff, group):
+    pass
+    PTSubMatrix = np.zeros((pixels, cutoff**group))
+    print PTSubMatrix
+
+"""
 def FindProb(self, CPTClass1, CPTClass2, CTClass1, CTClass2, group):
     temp = CTClass1
     for x in range(len(CTClass1)):
@@ -150,6 +164,7 @@ def FindProb(self, CPTClass1, CPTClass2, CTClass1, CTClass2, group):
     pxjw2 = temp
 
     temp = CPTClass1
+"""
 
 
 SemiNaive(5,2,2)
