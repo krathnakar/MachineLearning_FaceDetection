@@ -19,8 +19,8 @@ class SemiNaive:
         CPTClass2 = CoPairTabClass(self, nonface, cutoff, group)
         ProbTabel = FindProb2(self, CPTClass1, CPTClass2, CTClass1, CTClass2, group)
         SubGroup = findSubGroup(ProbTabel, group)
-        probTabSubGroup(pixels, cutoff, group)
-
+        faces_probTabSubGroup = probTabSubGroup(pixels, cutoff, group, SubGroup, np.array(face).T)
+        nfaces_probTabSubGroup = probTabSubGroup(pixels, cutoff, group, SubGroup, np.array(nonface).T)
 
 def occArrayFunc(self, face, cutoff, group):
 
@@ -133,10 +133,37 @@ def findSubGroup(C1, group):
     return submatrix
 
 
-def probTabSubGroup(pixels, cutoff, group):
+def probTabSubGroup(pixels, cutoff, group, subgroup, faces):
     pass
     PTSubMatrix = np.zeros((pixels, cutoff**group))
+    #print PTSubMatrix
+    #temp = []
+    for i in range(pixels):
+        temp = []
+        for j in range(group):
+            temp.append(subgroup[i][j])
+            pass
+
+        #insert_col = []
+        for each_face in range(group):
+            temp_face = []
+            for each in range(len(temp)):
+                temp_face.append(faces[each_face][temp[each]])
+            #print temp_face #second table circles in section5
+            insert_col = fromDigits(temp_face, cutoff)
+            PTSubMatrix[i][insert_col] += 1
     print PTSubMatrix
+    return PTSubMatrix
+
+
+def fromDigits(digits, b):
+    """Compute the number given by digits in base b."""
+    n = 0
+    for d in digits:
+        n = b * n + d
+    return n
+
+
 
 """
 def FindProb(self, CPTClass1, CPTClass2, CTClass1, CTClass2, group):
