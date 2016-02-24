@@ -21,6 +21,8 @@ class SemiNaive:
         SubGroup = findSubGroup(ProbTabel, group)
         faces_probTabSubGroup = probTabSubGroup(pixels, cutoff, group, SubGroup, np.array(face).T)
         nfaces_probTabSubGroup = probTabSubGroup(pixels, cutoff, group, SubGroup, np.array(nonface).T)
+        test(cutoff, np.array(face).T, SubGroup, faces_probTabSubGroup, nfaces_probTabSubGroup)
+        test(cutoff, np.array(nonface).T, SubGroup, faces_probTabSubGroup, nfaces_probTabSubGroup)
 
 def occArrayFunc(self, face, cutoff, group):
 
@@ -162,6 +164,41 @@ def fromDigits(digits, b):
     for d in digits:
         n = b * n + d
     return n
+
+def test(cutoff, faces, subgroup, faces_table, nfaces_table):
+    #values = []
+    epsilon = np.finfo(np.float).eps
+    #finding faces table last row
+    col = faces_table.shape[1]
+    temp = np.array(faces_table).T
+    templist = temp.tolist()
+    ftable = templist[col-1]
+    print ftable
+    #finding non faces table last row
+    ncol = nfaces_table.shape[1]
+    ntemp = np.array(nfaces_table).T
+    ntemplist = ntemp.tolist()
+    nftable = ntemplist[col-1]
+    print nftable
+    ####
+    print subgroup
+    ####
+    for each in faces:#samples coming in here like 1111 and 0110
+        pos_values = []
+        npos_values = []
+        for every in range(len(subgroup)):
+            count = 0
+            for i in subgroup[every]:
+                count += each[i]
+            pos_values.append(max(ftable[every]/max(count, epsilon), epsilon))
+            npos_values.append(max(nftable[every]/max(count, epsilon), epsilon))
+        print pos_values#pos array table
+        print npos_values#non pos array table
+        total_value = 0
+        for itr in range(len(pos_values)):
+            total_value += np.log(pos_values[itr]/npos_values[itr])
+        print total_value
+
 
 
 
