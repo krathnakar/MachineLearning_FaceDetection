@@ -10,8 +10,8 @@ class SemiNaive:
         cutoff = numCutOff
         face = np.array([[1,1,1],[1 ,0 ,1],[0 ,1 ,1],[1 ,1 ,1]])
         nonface = np.array([[1,1,1,0],[0,1,0,1],[0,1,1,0]]).T
-        print face
-        print nonface
+        #print face
+        #print nonface
         pixels = len(face)
         CTClass1 = occArrayFunc(self, face, cutoff, group)
         CPTClass1 = CoPairTabClass(self, face, cutoff, group)
@@ -21,8 +21,8 @@ class SemiNaive:
         SubGroup = findSubGroup(ProbTabel, group)
         faces_probTabSubGroup = probTabSubGroup(pixels, cutoff, group, SubGroup, np.array(face).T)
         nfaces_probTabSubGroup = probTabSubGroup(pixels, cutoff, group, SubGroup, np.array(nonface).T)
-        test(cutoff, np.array(face).T, SubGroup, faces_probTabSubGroup, nfaces_probTabSubGroup)
-        test(cutoff, np.array(nonface).T, SubGroup, faces_probTabSubGroup, nfaces_probTabSubGroup)
+        #test_img(cutoff, np.array(face).T, SubGroup, faces_probTabSubGroup, nfaces_probTabSubGroup)
+        test_img(cutoff, np.array(nonface).T, SubGroup, faces_probTabSubGroup, nfaces_probTabSubGroup)
 
 def occArrayFunc(self, face, cutoff, group):
 
@@ -59,7 +59,7 @@ def CoPairTabClass(self, face, cutoff, group):
 
 
 def FindProb2(self, CPTClass1, CPTClass2, CTClass1, CTClass2, group):
-    print CPTClass1.shape
+    #print CPTClass1.shape
     epsilon = np.finfo(np.float).eps
 
     C1 = np.zeros((CPTClass1.shape[0],CPTClass1.shape[1]))
@@ -113,8 +113,8 @@ def FindProb2(self, CPTClass1, CPTClass2, CTClass1, CTClass2, group):
 def findSubGroup(C1, group):
     pass
     temp = C1
-    print temp.shape
-    print group
+    #print temp.shape
+    #print group
     submatrix = np.zeros((temp.shape[0], group))
     for each in range(group):
         for col in range(temp.shape[0]):
@@ -131,7 +131,7 @@ def findSubGroup(C1, group):
                 #ind = C1[col].index(max(C1[col]))
                 #print ind
                 #submatrix[col][each] = max(i for i in C1[col])
-    print temp
+    #print temp
     return submatrix
 
 
@@ -165,6 +165,33 @@ def fromDigits(digits, b):
         n = b * n + d
     return n
 
+def test_img(cutoff, faces, subgroup, faces_table, nfaces_table):
+    #print subgroup.shape
+    epsilon = np.finfo(np.float).eps
+    #print faces
+    faces = faces[2]#change this later
+    #print faces
+    pos_values = []
+    npos_values = []
+    for each_row in range(subgroup.shape[0]):#goes through rows of subgroup
+        #print subgroup[each_row]
+        temp = []
+        for each_col in subgroup[each_row]:#takes each column VALUES in each row
+            temp.append(faces[each_col])#appends sample circles to temp- matrix 3 in section6
+        #print temp
+        find_col = fromDigits(temp, cutoff)#finds column in matrix 2 in section6
+        #print find_col
+        pos_values.append(max(faces_table[each_row][find_col], epsilon))#positive prob. table
+        npos_values.append(max(nfaces_table[each_row][find_col], epsilon))#negative prob. table
+    print pos_values
+    print npos_values
+    #finding log equation value
+    total_value = 0
+    for itr in range(len(pos_values)):
+        total_value += np.log(pos_values[itr]/npos_values[itr])
+    print total_value
+
+"""
 def test(cutoff, faces, subgroup, faces_table, nfaces_table):
     #values = []
     epsilon = np.finfo(np.float).eps
@@ -199,7 +226,7 @@ def test(cutoff, faces, subgroup, faces_table, nfaces_table):
             total_value += np.log(pos_values[itr]/npos_values[itr])
         print total_value
 
-
+"""
 
 
 """
