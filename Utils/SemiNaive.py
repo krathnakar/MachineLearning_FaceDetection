@@ -6,14 +6,27 @@ import numpy as np
 
 
 class SemiNaive:
-    def __init__(self, face,numCutOff, group):
-        cutoff = numCutOff
-        face = np.array([[1,1,1],[1 ,0 ,1],[0 ,1 ,1],[1 ,1 ,1]])
-        nonface = np.array([[1,1,1,0],[0,1,0,1],[0,1,1,0]]).T
+    def __init__(self, face_shape,numCutOff, group):
+        self.cutoff = numCutOff
+        self.group = group
+        #face = np.array([[1,1,1],[1 ,0 ,1],[0 ,1 ,1],[1 ,1 ,1]])#pixel*sample
+        #nonface = np.array([[1,1,1,0],[0,1,0,1],[0,1,1,0]]).T
         #print face
         #print nonface
-        pixels = len(face)
+        self.pixels = face_shape
+
+    def train(self, face, nonface, model):
+        cutoff = self.cutoff
+        group = self.group
+        pixels = self.pixels
+        #print "pix"+str(pixels)
+        #print face.shape
+        #face = np.array(face).T
+        #print face.shape
+        #nonface = np.array(nonface).T
+        #print nonface
         CTClass1 = occArrayFunc(self, face, cutoff, group)
+        #print "CTClass1"+str(np.array(CTClass1).shape)
         CPTClass1 = CoPairTabClass(self, face, cutoff, group)
         CTClass2 = occArrayFunc(self, nonface, cutoff, group)
         CPTClass2 = CoPairTabClass(self, nonface, cutoff, group)
@@ -22,7 +35,7 @@ class SemiNaive:
         faces_probTabSubGroup = probTabSubGroup(pixels, cutoff, group, SubGroup, np.array(face).T)
         nfaces_probTabSubGroup = probTabSubGroup(pixels, cutoff, group, SubGroup, np.array(nonface).T)
         #test_img(cutoff, np.array(face).T, SubGroup, faces_probTabSubGroup, nfaces_probTabSubGroup)
-        test_img(cutoff, np.array(nonface).T, SubGroup, faces_probTabSubGroup, nfaces_probTabSubGroup)
+        #test_img(cutoff, np.array(nonface).T, SubGroup, faces_probTabSubGroup, nfaces_probTabSubGroup)
 
 def occArrayFunc(self, face, cutoff, group):
 
@@ -31,14 +44,18 @@ def occArrayFunc(self, face, cutoff, group):
         #create variable for all possible values below
         occ1=0.0
         occ0=0.0
+        occ2=0.0
         for each in x[0:cutoff]:#restricting to Cutoff->2 samples
             #change below loops according to possible values
+            if each==2:
+                occ2+=1
             if each==1:
                 occ1+=1
             elif each==0:
                 occ0+=1
-        temp = [occ0, occ1]#row in occurence table
+        temp = [occ0, occ1, occ2]#row in occurence table
         occArray.append(temp)#occurence table
+
     return occArray
 
 def CoPairTabClass(self, face, cutoff, group):
@@ -59,7 +76,7 @@ def CoPairTabClass(self, face, cutoff, group):
 
 
 def FindProb2(self, CPTClass1, CPTClass2, CTClass1, CTClass2, group):
-    #print CPTClass1.shape
+    print CPTClass1.shape
     epsilon = np.finfo(np.float).eps
 
     C1 = np.zeros((CPTClass1.shape[0],CPTClass1.shape[1]))
@@ -258,4 +275,4 @@ def FindProb(self, CPTClass1, CPTClass2, CTClass1, CTClass2, group):
 """
 
 
-SemiNaive(5,2,2)
+#SemiNaive(5,2,2)

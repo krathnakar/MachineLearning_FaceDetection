@@ -50,7 +50,9 @@ if __name__ == '__main__':
     
     model = Model(GetCurrentPath() + '/Models/ProbabilityTables.pkl')    
     model.setCutOffs(cutoffs)         
-         
+    #print faces
+    #print faces.shape[0]
+
     
 #    faces = [[1,1,0,1],[1,0,1,1]]
 #    nonfaces = [[1,1,1,0],[0,1,0,1]]

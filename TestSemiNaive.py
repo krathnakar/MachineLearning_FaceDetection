@@ -43,20 +43,20 @@ if __name__ == '__main__':
     from Model import *
     
     
-    #model = Model(GetCurrentPath() + '/Models/ProbabilityTables.pkl')
-    #model.read()
+    model = Model(GetCurrentPath() + '/Models/ProbabilityTables.pkl')
+    model.read()
 
-    #[faces, nonfaces] = LoadData(GetCurrentPath() + '/Data/CalTech/test/faces/', \
-    #                             GetCurrentPath() + '/Data/CalTech/test/non-faces/', \
-    #                             model)
-                                  
-    
-    faces = [[1,1,0,1],[1,0,1,1],[1,1,1,1]]
-    nonfaces = [[1,1,1,0],[0,1,0,1],[0,1,1,0]]
-    faces = np.array(faces).T
-    nonfaces = np.array(nonfaces).T 
-    
-    classifier = SemiNaive(faces, 2, 2)#model.getNumCutOffs(), model.getSubgroupSize())
+    [faces, nonfaces] = LoadData(GetCurrentPath() + '/Data/CalTech/test/faces/', \
+                                 GetCurrentPath() + '/Data/CalTech/test/non-faces/', \
+                                 model)
+
+
+#    faces = [[1,1,0,1],[1,0,1,1],[1,1,1,1]]
+#    nonfaces = [[1,1,1,0],[0,1,0,1],[0,1,1,0]]
+#    faces = np.array(faces).T
+#    nonfaces = np.array(nonfaces).T
+
+    classifier = SemiNaive(faces.shape[0], model.getNumCutOffs(), model.getSubgroupSize())
     classifier.loadModel(model)
     likelihoodClass1 = classifier.test(faces)
     print '------------------------------------'
