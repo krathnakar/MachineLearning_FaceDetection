@@ -49,7 +49,8 @@ if __name__ == '__main__':
                                  GetCurrentPath() + '/Data/CalTech/train/non-faces/')
     
     model = Model(GetCurrentPath() + '/Models/ProbabilityTables.pkl')    
-    model.setCutOffs(cutoffs)         
+    model.setCutOffs(cutoffs)
+
     #print faces
     #print faces.shape[0]
 
@@ -61,6 +62,7 @@ if __name__ == '__main__':
     
     classifier = SemiNaive(faces.shape[0], settings.NUM_CUTOFF, settings.SUBGROUP_SIZE)    
     classifier.train(faces, nonfaces, model)
+    #model.write()
     
     del faces
     del nonfaces

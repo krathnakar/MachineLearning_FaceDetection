@@ -19,6 +19,7 @@ class SemiNaive:
         cutoff = self.cutoff
         group = self.group
         pixels = self.pixels
+        #print face
         #print "pix"+str(pixels)
         #print face.shape
         #face = np.array(face).T
@@ -36,6 +37,15 @@ class SemiNaive:
         nfaces_probTabSubGroup = probTabSubGroup(pixels, cutoff, group, SubGroup, np.array(nonface).T)
         #test_img(cutoff, np.array(face).T, SubGroup, faces_probTabSubGroup, nfaces_probTabSubGroup)
         #test_img(cutoff, np.array(nonface).T, SubGroup, faces_probTabSubGroup, nfaces_probTabSubGroup)
+        model.setSubgroupSize(group)
+        model.setDataSize(pixels)#length of faces.shape[0]
+        model.setNumClass1(len(face))#no.of samples faces
+        model.setNumClass2(len(nonface))#no. of samples nfaces
+        model.setSubgroups(SubGroup)#s
+        model.setTableClass1(faces_probTabSubGroup)
+        model.setTableClass2(nfaces_probTabSubGroup)
+        model.setGoodness("commented")
+        model.write()
 
 def occArrayFunc(self, face, cutoff, group):
 
@@ -45,15 +55,25 @@ def occArrayFunc(self, face, cutoff, group):
         occ1=0.0
         occ0=0.0
         occ2=0.0
+        occ3=0.0
+        occ4=0.0
+        occ5=0.0
         for each in x[0:cutoff]:#restricting to Cutoff->2 samples
             #change below loops according to possible values
-            if each==2:
+            if each==5:
+                occ5+=1
+            elif each==4:
+                occ4+=1
+            elif each==3:
+                occ3+=1
+
+            elif each==2:
                 occ2+=1
-            if each==1:
+            elif each==1:
                 occ1+=1
             elif each==0:
                 occ0+=1
-        temp = [occ0, occ1, occ2]#row in occurence table
+        temp = [occ0, occ1, occ2, occ3, occ4, occ5]#row in occurence table
         occArray.append(temp)#occurence table
 
     return occArray
@@ -76,6 +96,7 @@ def CoPairTabClass(self, face, cutoff, group):
 
 
 def FindProb2(self, CPTClass1, CPTClass2, CTClass1, CTClass2, group):
+    print np.array(CTClass1).shape
     print CPTClass1.shape
     epsilon = np.finfo(np.float).eps
 
