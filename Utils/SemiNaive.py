@@ -47,6 +47,58 @@ class SemiNaive:
         model.setGoodness("commented")
         model.write()
 
+    def loadModel(self, model):
+
+        ref = model.read()
+
+        self.subgroupSize = model.subgroupSize
+        self.pixels = model.dataSize
+        self.numClass1 = model.numClass1
+        self.numClass2 = model.numClass2
+        self.subGroups = model.subgroups
+        self.tableClass1 = model.tableClass1
+        self.tableClass2 = model.tableClass2
+        self.goodness = model.goodness
+
+
+
+    def test(self, faces):#, subgroup, faces_table, nfaces_table):
+        #print subgroup.shape
+        cutoff = self.cutoff
+        subgroup = self.subGroups
+        faces_table = self.tableClass1
+        nfaces_table = self.tableClass2
+
+        epsilon = np.finfo(np.float).eps
+        #print faces
+        #faces = faces[2]#change this later
+        #print faces
+        pos_values = []
+        npos_values = []
+        for each_row in range(subgroup.shape[0]):#goes through rows of subgroup
+            #print subgroup[each_row]
+            temp = []
+            for each_col in subgroup[each_row]:#takes each column VALUES in each row
+                temp.append(faces[each_col])#appends sample circles to temp- matrix 3 in section6
+            #print temp
+            find_col = fromDigits(temp, cutoff)#finds column in matrix 2 in section6
+            #print find_col
+            pos_values.append(faces_table[each_row][find_col])#, epsilon))#positive prob. table
+            npos_values.append(nfaces_table[each_row][find_col])#, epsilon))#negative prob. table
+        #print pos_values
+        #print npos_values
+        #finding log equation value
+        total_value = 0
+        pos_values = np.array(pos_values)
+        npos_values = np.array(npos_values)
+        print npos_values.shape
+        for itr in range(len(pos_values)):
+            if npos_values[itr] == 0:
+                npos_values[itr] = epsilon
+            total_value += np.log(pos_values[itr]/npos_values[itr])
+        return total_value
+
+
 def occArrayFunc(self, face, cutoff, group):
 
     occArray = []
