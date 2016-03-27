@@ -74,10 +74,11 @@ class SemiNaive:
         #print faces
         #faces = faces[2]#change this later
         #print faces
-        pos_values = []
-        npos_values = []
+
         final_value = []
         for each_face in faces:
+            pos_values = []
+            npos_values = []
             for each_row in range(subgroup.shape[0]):#goes through rows of subgroup
                 #print subgroup[each_row]
                 temp = []
