@@ -16,7 +16,7 @@ def ReadDataSet(datapath):
 
     data = []
     #for i in range(0,len(dirfiles)):
-    for i in range(0,min(50,len(dirfiles))):
+    for i in range(0,min(361,len(dirfiles))):
     
         fname = dirfiles[i]
         if (fname[0] != '.'):
